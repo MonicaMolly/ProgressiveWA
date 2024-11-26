@@ -1,0 +1,93 @@
+<html> 
+    <head> 
+    <title> Vue.js Pet Depot</title>
+ 
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    </head>
+
+<body>
+    <!--the element where Vue will mount-->
+    <div id="app">
+
+        <header>
+        <h1 v-text="sitename"></h1>
+        <button>
+            <!-- 'cartItemCount' is used the same way as a data property. -->
+            {{ cartItemCount }}
+            <!-- add the cart icon -->
+            <span class="bi bi-cart"></span> Checkout
+            </button>
+           
+        </header>
+
+
+        <main>
+            <div v-if="showProduct">
+            <figure>
+                <img v-bind:src="product.image">
+            </figure>
+            <h2 v-text="product.title"></h2>
+            <p v-html="product.description"></p>
+            <p>Price: {{product.price}}</p>
+            <p>available stock: {{product.availableInventory}}</p>
+            
+         <!-- This button will be displayed when 'canAddToCart' is True -->
+            <button v-on:click="addToCart" v-if="canAddToCart"> Add to cart </button>
+        <!-- This button will be displayed otherwise -->
+            <button disabled='disabled' v-else>Add to cart</button>
+</div>
+
+<div v-else>
+    <h2>Checkout</h2>
+</div>
+    <button v-on:click='showCheckout'>
+        {{cartItemCount}}
+        <span class="bi bi-cart"></span>Checkout</button>
+
+        </main>
+        </div>
+
+    <script type ="text/javascript">
+        let webstore = new Vue({ //Vue instance
+            el: '#app', 
+                         //the option object : DOM mounting point 
+            data:{  //the data option
+            // the key sitename matches the value of v-text earlier
+            showProduct: true,
+
+            product: {
+    id: 1001,
+    title: "Cat Food, 25lb bag",
+    description: "A 25 pound bag of irresistible organic goodness for your cat.",
+    price: 2000,
+    image: "images/cat.jpg",
+    availableInventory: 5
+},
+cart: []
+},
+methods: {
+    addToCart: function () {
+        this.cart.push(this.product.id);
+        
+    },
+    showCheckout() {
+ this.showProduct= this.showProduct? false : true;
+ },
+ 
+ },
+ computed:{ // the Computed Property object
+    cartItemCount: function() { // the property name
+                                // its value is calculated when it is called
+                    return this.cart.length|| "";
+                },
+                canAddToCart: function()
+                {
+                    return this.product.availableInventory>this.cartItemCount;
+                } }
+    });
+
+    </script>
+</body>
+</html>
